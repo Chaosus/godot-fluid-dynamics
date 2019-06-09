@@ -1,10 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Test.gd" type="Script" id=1]
 [ext_resource path="res://Simulator.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Modes.gd" type="Script" id=3]
-
-[sub_resource type="ViewportTexture" id=1]
 
 [node name="Test" type="Control"]
 margin_right = 526.0
@@ -24,7 +22,6 @@ __meta__ = {
 }
 
 [node name="Simulator" parent="VBoxContainer" instance=ExtResource( 2 )]
-texture = SubResource( 1 )
 splat_radius = 10.0
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]

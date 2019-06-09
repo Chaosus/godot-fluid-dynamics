@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://Simulator.gd" type="Script" id=1]
 [ext_resource path="res://scripts/Density.gd" type="Script" id=2]
@@ -14,14 +14,12 @@
 [ext_resource path="res://scripts/Final.gd" type="Script" id=12]
 [ext_resource path="res://firegrad.tres" type="Gradient" id=13]
 
-[sub_resource type="ViewportTexture" id=1]
-
-[sub_resource type="ImageTexture" id=2]
+[sub_resource type="ImageTexture" id=1]
 flags = 3
 flags = 3
 size = Vector2( 512, 512 )
 
-[sub_resource type="ShaderMaterial" id=3]
+[sub_resource type="ShaderMaterial" id=2]
 resource_local_to_scene = true
 shader = ExtResource( 4 )
 shader_param/N = 512.0
@@ -29,12 +27,12 @@ shader_param/max_iterations = 20
 shader_param/diff = 10.0
 shader_param/dt = 10.0
 
-[sub_resource type="ImageTexture" id=4]
+[sub_resource type="ImageTexture" id=3]
 flags = 3
 flags = 3
 size = Vector2( 512, 512 )
 
-[sub_resource type="Shader" id=5]
+[sub_resource type="Shader" id=4]
 code = "shader_type canvas_item;
 
 uniform float N = 512;
@@ -98,25 +96,25 @@ void fragment()
 	COLOR.rgb = vec3(d);
 }"
 
-[sub_resource type="ShaderMaterial" id=6]
-shader = SubResource( 5 )
+[sub_resource type="ShaderMaterial" id=5]
+shader = SubResource( 4 )
 shader_param/N = 512.0
 
-[sub_resource type="ImageTexture" id=7]
+[sub_resource type="ImageTexture" id=6]
 flags = 3
 flags = 3
 size = Vector2( 512, 512 )
 
-[sub_resource type="ShaderMaterial" id=8]
+[sub_resource type="ShaderMaterial" id=7]
 shader = ExtResource( 5 )
 shader_param/bounds = ExtResource( 6 )
 
-[sub_resource type="ImageTexture" id=9]
+[sub_resource type="ImageTexture" id=8]
 flags = 3
 flags = 3
 size = Vector2( 512, 512 )
 
-[sub_resource type="Shader" id=10]
+[sub_resource type="Shader" id=9]
 resource_local_to_scene = true
 code = "shader_type canvas_item;
 
@@ -127,15 +125,15 @@ void fragment()
 	COLOR.rgb = vec3(mix(texture(SCREEN_TEXTURE, SCREEN_UV).rgb, vec3(0.0, 0.0, 0.0), 0.001).r, 0, 0);
 }"
 
-[sub_resource type="ShaderMaterial" id=11]
-shader = SubResource( 10 )
+[sub_resource type="ShaderMaterial" id=10]
+shader = SubResource( 9 )
 
-[sub_resource type="ImageTexture" id=12]
+[sub_resource type="ImageTexture" id=11]
 flags = 3
 flags = 3
 size = Vector2( 512, 512 )
 
-[sub_resource type="Shader" id=13]
+[sub_resource type="Shader" id=12]
 code = "shader_type canvas_item;
 
 // SPLAT VELOCITY SHADER
@@ -158,44 +156,44 @@ void fragment()
     COLOR.rgb = mix(base, force * 0.5 + 0.5, splat);
 }"
 
-[sub_resource type="ShaderMaterial" id=14]
+[sub_resource type="ShaderMaterial" id=13]
 resource_local_to_scene = true
-shader = SubResource( 13 )
+shader = SubResource( 12 )
 shader_param/force = Vector3( 0, 0, 0 )
 shader_param/point = Vector2( 0, 0 )
 shader_param/radius = 375.0
 
-[sub_resource type="ImageTexture" id=15]
+[sub_resource type="ImageTexture" id=14]
 flags = 3
 flags = 3
 size = Vector2( 512, 512 )
 
-[sub_resource type="ShaderMaterial" id=16]
+[sub_resource type="ShaderMaterial" id=15]
 resource_local_to_scene = true
 shader = ExtResource( 8 )
 shader_param/N = 512.0
+
+[sub_resource type="ImageTexture" id=16]
+flags = 3
+flags = 3
+size = Vector2( 512, 512 )
 
 [sub_resource type="ImageTexture" id=17]
 flags = 3
 flags = 3
 size = Vector2( 512, 512 )
 
-[sub_resource type="ImageTexture" id=18]
-flags = 3
-flags = 3
-size = Vector2( 512, 512 )
-
-[sub_resource type="ShaderMaterial" id=19]
+[sub_resource type="ShaderMaterial" id=18]
 resource_local_to_scene = true
 shader = ExtResource( 10 )
 shader_param/N = 512.0
 
-[sub_resource type="ImageTexture" id=20]
+[sub_resource type="ImageTexture" id=19]
 flags = 3
 flags = 3
 size = Vector2( 512, 512 )
 
-[sub_resource type="ShaderMaterial" id=21]
+[sub_resource type="ShaderMaterial" id=20]
 resource_local_to_scene = true
 shader = ExtResource( 11 )
 shader_param/N = 512.0
@@ -203,7 +201,7 @@ shader_param/A = 1.0
 shader_param/C = 4.0
 shader_param/MAX_ITER = 20
 
-[sub_resource type="Shader" id=26]
+[sub_resource type="Shader" id=21]
 code = "shader_type canvas_item;
 
 uniform sampler2D density_texture;
@@ -219,16 +217,16 @@ void fragment()
 	COLOR.rgb = color;
 }"
 
-[sub_resource type="GradientTexture" id=30]
+[sub_resource type="GradientTexture" id=22]
 gradient = ExtResource( 13 )
 
-[sub_resource type="ShaderMaterial" id=28]
+[sub_resource type="ShaderMaterial" id=23]
 resource_local_to_scene = true
-shader = SubResource( 26 )
-shader_param/gradient_texture = SubResource( 30 )
+shader = SubResource( 21 )
+shader_param/gradient_texture = SubResource( 22 )
 shader_param/obstacles_texture = ExtResource( 6 )
 
-[sub_resource type="ImageTexture" id=29]
+[sub_resource type="ImageTexture" id=24]
 size = Vector2( 512, 512 )
 
 [node name="Simulator" type="TextureRect"]
@@ -236,7 +234,6 @@ margin_right = 512.0
 margin_bottom = 512.0
 rect_min_size = Vector2( 512, 512 )
 focus_mode = 2
-texture = SubResource( 1 )
 stretch_mode = 1
 script = ExtResource( 1 )
 __meta__ = {
@@ -259,27 +256,27 @@ script = ExtResource( 2 )
 material = ExtResource( 3 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = SubResource( 2 )
+texture = SubResource( 1 )
 stretch_mode = 1
 
 [node name="Buffer" type="BackBufferCopy" parent="Density"]
 copy_mode = 2
 
 [node name="Diffusion" type="TextureRect" parent="Density"]
-material = SubResource( 3 )
+material = SubResource( 2 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = SubResource( 4 )
+texture = SubResource( 3 )
 stretch_mode = 1
 
 [node name="Buffer2" type="BackBufferCopy" parent="Density"]
 copy_mode = 2
 
 [node name="Advection" type="TextureRect" parent="Density"]
-material = SubResource( 6 )
+material = SubResource( 5 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = SubResource( 7 )
+texture = SubResource( 6 )
 stretch_mode = 1
 
 [node name="Buffer3" type="BackBufferCopy" parent="Density"]
@@ -287,10 +284,10 @@ copy_mode = 2
 
 [node name="Bounds" type="TextureRect" parent="Density"]
 visible = false
-material = SubResource( 8 )
+material = SubResource( 7 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = SubResource( 9 )
+texture = SubResource( 8 )
 stretch_mode = 1
 
 [node name="Buffer4" type="BackBufferCopy" parent="Density"]
@@ -299,10 +296,10 @@ copy_mode = 2
 
 [node name="Subtraction" type="TextureRect" parent="Density"]
 visible = false
-material = SubResource( 11 )
+material = SubResource( 10 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = SubResource( 12 )
+texture = SubResource( 11 )
 stretch_mode = 1
 
 [node name="Buffer5" type="BackBufferCopy" parent="Density"]
@@ -320,20 +317,20 @@ render_target_update_mode = 3
 script = ExtResource( 7 )
 
 [node name="Splat" type="TextureRect" parent="Velocity"]
-material = SubResource( 14 )
+material = SubResource( 13 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = SubResource( 15 )
+texture = SubResource( 14 )
 stretch_mode = 1
 
 [node name="Buffer" type="BackBufferCopy" parent="Velocity"]
 copy_mode = 2
 
 [node name="Diffusion" type="TextureRect" parent="Velocity"]
-material = SubResource( 3 )
+material = SubResource( 2 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = SubResource( 4 )
+texture = SubResource( 3 )
 stretch_mode = 1
 
 [node name="Buffer2" type="BackBufferCopy" parent="Velocity"]
@@ -341,10 +338,10 @@ copy_mode = 2
 
 [node name="Project" type="TextureRect" parent="Velocity"]
 visible = false
-material = SubResource( 16 )
+material = SubResource( 15 )
 margin_right = 512.0
 margin_bottom = 512.0
-texture = SubResource( 17 )
+texture = SubResource( 16 )
 stretch_mode = 1
 
 [node name="Buffer3" type="BackBufferCopy" parent="Velocity"]
@@ -353,10 +350,10 @@ copy_mode = 2
 
 [node name="Advection" type="TextureRect" parent="Velocity"]
 visible = false
-material = SubResource( 6 )
+material = SubResource( 5 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = SubResource( 7 )
+texture = SubResource( 6 )
 stretch_mode = 1
 
 [node name="Buffer4" type="BackBufferCopy" parent="Velocity"]
@@ -365,10 +362,10 @@ copy_mode = 2
 
 [node name="Project2" type="TextureRect" parent="Velocity"]
 visible = false
-material = SubResource( 16 )
+material = SubResource( 15 )
 margin_right = 512.0
 margin_bottom = 512.0
-texture = SubResource( 18 )
+texture = SubResource( 17 )
 stretch_mode = 1
 
 [node name="Buffer5" type="BackBufferCopy" parent="Velocity"]
@@ -386,20 +383,20 @@ render_target_update_mode = 3
 script = ExtResource( 9 )
 
 [node name="Divergence" type="TextureRect" parent="Divergence"]
-material = SubResource( 19 )
+material = SubResource( 18 )
 margin_right = 512.0
 margin_bottom = 512.0
-texture = SubResource( 20 )
+texture = SubResource( 19 )
 stretch_mode = 1
 
 [node name="Buffer" type="BackBufferCopy" parent="Divergence"]
 copy_mode = 2
 
 [node name="LinSolve" type="TextureRect" parent="Divergence"]
-material = SubResource( 21 )
+material = SubResource( 20 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = SubResource( 4 )
+texture = SubResource( 3 )
 stretch_mode = 1
 
 [node name="Buffer2" type="BackBufferCopy" parent="Divergence"]
@@ -416,8 +413,8 @@ render_target_update_mode = 3
 script = ExtResource( 12 )
 
 [node name="Final" type="TextureRect" parent="Final"]
-material = SubResource( 28 )
+material = SubResource( 23 )
 margin_right = 512.0
 margin_bottom = 512.0
-texture = SubResource( 29 )
+texture = SubResource( 24 )
 stretch_mode = 1
