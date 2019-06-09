@@ -3,14 +3,20 @@ extends Control
 onready var sim = $VBoxContainer/Simulator
 onready var mode_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/MenuButton
 
-onready var input_tab = $VBoxContainer/PanelContainer/HBox/VBox/InputSettings
-onready var sim_tab = $VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings
+onready var input_tab = $VBoxContainer/PanelContainer/HBox/VBox/InputTab
+onready var sim_tab = $VBoxContainer/PanelContainer/HBox/VBox/SimTab
 
 onready var add_button = $VBoxContainer/PanelContainer/HBox/VBox/ModeBox/Add
 onready var sub_button = $VBoxContainer/PanelContainer/HBox/VBox/ModeBox/Sub
 
-onready var reset_input_button = $VBoxContainer/PanelContainer/HBox/VBox/InputHeader/ResetButton
-onready var reset_sim_button = $VBoxContainer/PanelContainer/HBox/VBox/SimHeader/ResetButton
+onready var reset_input_button = $VBoxContainer/PanelContainer/HBox/VBox/InputTab/InputHeader/ResetButton
+onready var reset_sim_button = $VBoxContainer/PanelContainer/HBox/VBox/SimTab/SimHeader/ResetButton
+
+onready var input_tab_button = $VBoxContainer/PanelContainer/HBox/VBox/Tabs/InputTabButton
+onready var sim_tab_button = $VBoxContainer/PanelContainer/HBox/VBox/Tabs/SimTabButton
+
+var radius_control
+var force_control
 
 var all_settings = []
 var input_settings = []
@@ -26,12 +32,16 @@ var mode = 0
 func _ready() -> void:
 	sim.grab_focus()
 	
-	input_settings.append($VBoxContainer/PanelContainer/HBox/VBox/InputSettings/Radius)
-	input_settings.append($VBoxContainer/PanelContainer/HBox/VBox/InputSettings/Force)
+	radius_control = $VBoxContainer/PanelContainer/HBox/VBox/InputTab/InputSettings/Radius
+	force_control = $VBoxContainer/PanelContainer/HBox/VBox/InputTab/InputSettings/Force
+	
+	input_settings.append($VBoxContainer/PanelContainer/HBox/VBox/InputTab/InputSettings/InvertRMB)
+	input_settings.append(radius_control)
+	input_settings.append(force_control)
 
-	sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/DisableObstacles)
-	sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/Viscocity)
-	sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/Vorticity)
+	sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimTab/SimulationSettings/DisableObstacles)
+	sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimTab/SimulationSettings/Viscocity)
+	sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimTab/SimulationSettings/Vorticity)
 	
 	all_settings.append(input_settings)
 	all_settings.append(sim_settings)
@@ -51,14 +61,16 @@ func _process(_delta : float) -> void:
 		set_surface(wrapi(curr_surf - 1, 0, MAX_SURF))
 	if Input.is_action_just_pressed("switch_surface_forward"):
 		set_surface(wrapi(curr_surf + 1, 0, MAX_SURF))
-	if Input.is_action_just_pressed("surf_density"):
-		set_surface(0)
-	if Input.is_action_just_pressed("surf_velocity"):
-		set_surface(1)
-	if Input.is_action_just_pressed("surf_divergence"):
-		set_surface(2)
-	if Input.is_action_just_pressed("surf_final"):
-		set_surface(3)
+	
+	if sim.is_cursor_inside_sim():
+		if Input.is_action_just_pressed("surf_density"):
+			set_surface(0)
+		if Input.is_action_just_pressed("surf_velocity"):
+			set_surface(1)
+		if Input.is_action_just_pressed("surf_divergence"):
+			set_surface(2)
+		if Input.is_action_just_pressed("surf_final"):
+			set_surface(3)
 	
 	if Input.is_action_just_pressed("clear"):
 		sim.clear()
@@ -71,6 +83,17 @@ func _process(_delta : float) -> void:
 		else:
 			sub_button.pressed = true
 			sim.brush_mode = 1
+	
+	if Input.is_action_just_released("increase_radius"):
+		if Input.is_key_pressed(KEY_SHIFT):
+			force_control.increase()
+		else:
+			radius_control.increase()
+	if Input.is_action_just_released("decrease_radius"):
+		if Input.is_key_pressed(KEY_SHIFT):
+			force_control.decrease()
+		else:
+			radius_control.decrease()
 	
 func _on_MenuButton_item_selected(id : int) -> void:
 	sim.change_mode(id)
@@ -98,12 +121,12 @@ func check_settings():
 			reset_sim_button.disabled = false
 			break
 
-func _on_Radius_value_changed(value : float) -> void:
+func _on_Radius_value_changed(value):
 	if sim:
 		check_settings()
 		sim.splat_radius = value
 
-func _on_Force_value_changed(value : float) -> void:
+func _on_Force_value_changed(value):
 	if sim:
 		check_settings()
 		sim.force = value
@@ -146,3 +169,37 @@ func _on_CircleFormButton_pressed():
 func _on_SquareFormButton_pressed():
 	if sim:
 		sim.set_form(1)
+
+func _on_LMB_Density_toggled(button_pressed):
+	if sim:
+		sim.set_lmb_density(button_pressed)
+
+func _on_LMB_Velocity_toggled(button_pressed):
+	if sim:
+		sim.set_lmb_velocity(button_pressed)
+
+func _on_RMB_Density_toggled(button_pressed):
+	if sim:
+		sim.set_rmb_density(button_pressed)
+
+func _on_RMB_Velocity_toggled(button_pressed):
+	if sim:
+		sim.set_rmb_velocity(button_pressed)
+
+func _on_InvertRMB_checked_changed(button_pressed):
+	if sim:
+		check_settings()
+		sim.set_invert_rmb(button_pressed)
+
+func _on_InputTabButton_pressed():
+	input_tab_button.pressed = true
+	sim_tab_button.pressed = false
+	input_tab.visible = true
+	sim_tab.visible = false
+
+func _on_SimTabButton_pressed():
+	input_tab_button.pressed = false
+	sim_tab_button.pressed = true
+	input_tab.visible = false
+	sim_tab.visible = true
+

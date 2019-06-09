@@ -1,4 +1,3 @@
-tool
 extends HBoxContainer
 class_name SimSlider
 
@@ -11,6 +10,13 @@ onready var reset_button = $ResetButton
 export(float) var max_value = 5.0
 export(float) var step = 0.1
 export(float) var defval = 0.0
+export(float) var min_value = 0.0
+
+func increase() -> void:
+	slider.value += step
+
+func decrease() -> void:
+	slider.value -= step
 
 func get_value() -> float:
 	return slider.value
@@ -20,9 +26,11 @@ func reset() -> void:
 	reset_button.disabled = true
 
 func _ready() -> void:
+	slider.min_value = min_value
 	slider.max_value = max_value
 	slider.step = step
 	slider.value = defval
+	spin_box.min_value = min_value
 	spin_box.max_value = max_value
 	spin_box.step = step
 	spin_box.value = defval

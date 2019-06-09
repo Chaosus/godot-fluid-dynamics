@@ -6,8 +6,6 @@ onready var velocity = $Velocity
 onready var divergence = $Divergence
 onready var final = $Final
 
-#onready var pressure = $Pressure
-
 export(float) var splat_radius := 10.0;
 export(float) var force := 1.0
 export(int) var brush_mode := 1
@@ -16,19 +14,44 @@ export(ImageTexture) var obstacles_texture
 var density_splat
 var velocity_splat
 
-var mouse_pos := Vector2(0.0, 0.0)
-var prev_mouse_pos := Vector2(0.0, 0.0)
+var _mouse_pos := Vector2(0.0, 0.0)
+var _prev_mouse_pos := Vector2(0.0, 0.0)
 
-var mode_idx := 0
+var _mode_idx := 0
 var _disable_obstacles = false
 
 var empty_texture
 var _form
 
+var _lmb_density := true
+var _lmb_velocity := true
+var _rmb_density := true
+var _rmb_velocity := false
+var _invert_rmb := true
+var _is_cursor_inside_sim := false
+
+func set_lmb_density(toggled):
+	_lmb_density = toggled
+
+func set_lmb_velocity(toggled):
+	_lmb_velocity = toggled
+	
+func set_rmb_density(toggled):
+	_rmb_density = toggled
+
+func set_rmb_velocity(toggled):
+	_rmb_velocity = toggled
+
+func set_invert_rmb(toggled):
+	_invert_rmb = toggled
+	
+func is_cursor_inside_sim() -> bool:
+	return _is_cursor_inside_sim
+
 func set_form(form : int) -> void:
 	_form = form
-	density_splat.set_shader_param("form", form)
-	velocity_splat.set_shader_param("form", form)		
+	density_splat.set_shader_param("brush_form", form)
+	#velocity_splat.set_shader_param("brush_form", form)
 
 func create_texture(width : int, height : int):
 	var texture = ImageTexture.new()
@@ -55,10 +78,10 @@ func change_mode(id : int) -> void:
 		3:
 			v = final
 	texture = v.get_texture()
-	mode_idx = id
+	_mode_idx = id
 
 func get_mode() -> int:
-	return mode_idx
+	return _mode_idx
 
 func clear() -> void:
 	divergence.render_target_clear_mode = Viewport.CLEAR_MODE_ALWAYS
@@ -74,40 +97,54 @@ func _ready() -> void:
 	velocity_splat = $Velocity/Splat.material
 	
 	empty_texture = create_texture(512, 512)
+	density_splat.set_shader_param("radius", 0.0)
+	velocity_splat.set_shader_param("radius", 0.0)
 	
 	change_mode(3)
 
 func _input(event) -> void:
+	if event is InputEventMouse:
+		_is_cursor_inside_sim = get_rect().has_point(event.position)
+	
 	if event is InputEventMouseMotion:
-		prev_mouse_pos = mouse_pos
-		mouse_pos = event.position
-				
-func apply_density_splat(pos) -> void:
-	if !has_focus():
+		_prev_mouse_pos = _mouse_pos
+		_mouse_pos = event.position
+
+		
+func apply_density_splat() -> void:
+	if !is_cursor_inside_sim():
 		return
-	density_splat.set_shader_param("point", pos)
+	density_splat.set_shader_param("point", _mouse_pos)
 	
-	var fv
-	
-	if(brush_mode == 1): # subtract
-		fv = Vector3(1, 1, 1) - Vector3(force, force, force)
-	else: # add
-		fv = Vector3(force, force, force)
-	
+	var fv = Vector3(force, force, force)
+		
 	density_splat.set_shader_param("force", fv)
 	
-	if Input.is_mouse_button_pressed(BUTTON_LEFT):
+	var lmb = _lmb_density and Input.is_mouse_button_pressed(BUTTON_LEFT)
+	var rmb = _rmb_density and Input.is_mouse_button_pressed(BUTTON_RIGHT)
+	
+	if (lmb or rmb):
+		if rmb:
+			if _invert_rmb:
+				density_splat.set_shader_param("brush_mode", 1 if brush_mode == 0 else 0)
+			else:
+				density_splat.set_shader_param("brush_mode", brush_mode)
+		else:
+			density_splat.set_shader_param("brush_mode", brush_mode)
 		density_splat.set_shader_param("radius", splat_radius*splat_radius)
 	else:
 		density_splat.set_shader_param("radius", 0.0)
-		
-func apply_velocity_splat(pos) -> void:
-	if !has_focus():
+
+func apply_velocity_splat() -> void:
+	if !is_cursor_inside_sim():
 		return
-	velocity_splat.set_shader_param("point", pos)
+	velocity_splat.set_shader_param("point", _mouse_pos)
 	
-	if Input.is_mouse_button_pressed(BUTTON_LEFT):
-		var velocity := mouse_pos.direction_to(prev_mouse_pos)
+	var lmb = _lmb_velocity and Input.is_mouse_button_pressed(BUTTON_LEFT)
+	var rmb = _rmb_velocity and Input.is_mouse_button_pressed(BUTTON_RIGHT)
+	
+	if (lmb or rmb) && brush_mode == 0:
+		var velocity := _mouse_pos.direction_to(_prev_mouse_pos)
 		var rest = 0.0
 		if Vector2(sign(velocity.x), sign(velocity.y)) != Vector2(0, 0):
 			rest = 1.0
@@ -117,6 +154,6 @@ func apply_velocity_splat(pos) -> void:
 		velocity_splat.set_shader_param("radius", 0.0)
 	
 func _process(_delta : float) -> void:
-	apply_density_splat(mouse_pos)
-	apply_velocity_splat(mouse_pos)
-	prev_mouse_pos = mouse_pos
+	apply_density_splat()
+	apply_velocity_splat()
+	_prev_mouse_pos = _mouse_pos
