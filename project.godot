@@ -27,7 +27,7 @@ config/icon="res://icon.png"
 [display]
 
 window/size/width=512
-window/size/height=642
+window/size/height=660
 window/size/resizable=false
 
 [input]

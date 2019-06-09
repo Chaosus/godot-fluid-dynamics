@@ -1,16 +1,20 @@
 extends Control
 
 onready var sim = $VBoxContainer/Simulator
-onready var mode_button = $VBoxContainer/PanelContainer/VBox/HBoxContainer/MenuButton
+onready var mode_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/MenuButton
 
-onready var input_tab = $VBoxContainer/PanelContainer/VBox/InputSettings
-onready var sim_tab = $VBoxContainer/PanelContainer/VBox/SimulationSettings
+onready var input_tab = $VBoxContainer/PanelContainer/HBox/VBox/InputSettings
+onready var sim_tab = $VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings
 
-onready var tab_input_button = $VBoxContainer/PanelContainer/VBox/HBoxContainer2/InputSetupMode
-onready var tab_sim_button = $VBoxContainer/PanelContainer/VBox/HBoxContainer2/SimulationSetupMode
+onready var tab_input_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2/InputSetupMode
+onready var tab_sim_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2/SimulationSetupMode
 
-onready var add_button = $VBoxContainer/PanelContainer/VBox/HBoxContainer/Add
-onready var sub_button = $VBoxContainer/PanelContainer/VBox/HBoxContainer/Sub
+onready var add_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/Add
+onready var sub_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/Sub
+
+var spin_all_settings = []
+var spin_input_settings = []
+var spin_sim_settings = []
 
 var curr_tab = 0
 var curr_surf = 3
@@ -22,7 +26,16 @@ var mode = 0
 
 func _ready() -> void:
 	sim.grab_focus()
-
+	
+	spin_input_settings.append($VBoxContainer/PanelContainer/HBox/VBox/InputSettings/Radius)
+	spin_input_settings.append($VBoxContainer/PanelContainer/HBox/VBox/InputSettings/Force)
+	
+	spin_sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/Viscocity)
+	spin_sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/Vorticity)
+	
+	spin_all_settings.append(spin_input_settings)
+	spin_all_settings.append(spin_sim_settings)
+	
 func set_surface(idx : int) -> void:
 	curr_surf = idx
 	mode_button.select(idx)
@@ -99,3 +112,9 @@ func _on_Sub_pressed() -> void:
 	mode = 1
 	if sim:
 		sim.brush_mode = 1
+		
+func _on_ResetAllSettings_pressed():
+	for tab in spin_all_settings:
+		for setting in tab:
+			setting.reset()
+	
