@@ -1,8 +1,15 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Test.gd" type="Script" id=1]
 [ext_resource path="res://Simulator.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Modes.gd" type="Script" id=3]
+[ext_resource path="res://resources/add.png" type="Texture" id=4]
+[ext_resource path="res://resources/sub.png" type="Texture" id=5]
+[ext_resource path="res://SimSlider.tscn" type="PackedScene" id=6]
+
+[sub_resource type="ButtonGroup" id=2]
+
+[sub_resource type="ButtonGroup" id=1]
 
 [node name="Test" type="Control"]
 margin_right = 526.0
@@ -14,8 +21,9 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_right = 512.0
-margin_bottom = 546.0
+margin_left = 0.814514
+margin_right = 512.815
+margin_bottom = 642.0
 custom_constants/separation = 0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -27,40 +35,164 @@ splat_radius = 10.0
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 margin_top = 512.0
 margin_right = 512.0
-margin_bottom = 546.0
+margin_bottom = 644.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer"]
+[node name="VBox" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 505.0
-margin_bottom = 27.0
+margin_bottom = 125.0
 
-[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/HBoxContainer"]
-margin_top = 3.0
-margin_right = 40.0
-margin_bottom = 17.0
-text = "Mode:"
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBox"]
+margin_right = 498.0
+margin_bottom = 22.0
 
-[node name="MenuButton" type="OptionButton" parent="VBoxContainer/PanelContainer/HBoxContainer"]
-margin_left = 44.0
-margin_right = 134.0
-margin_bottom = 20.0
+[node name="Surface" type="Label" parent="VBoxContainer/PanelContainer/VBox/HBoxContainer"]
+margin_top = 4.0
+margin_right = 50.0
+margin_bottom = 18.0
+text = "Surface:"
+
+[node name="MenuButton" type="OptionButton" parent="VBoxContainer/PanelContainer/VBox/HBoxContainer"]
+margin_left = 54.0
+margin_right = 144.0
+margin_bottom = 22.0
+hint_tooltip = "Surface mode selector
+Use 'Q' and 'E' to switch between them"
 text = "Density"
 script = ExtResource( 3 )
 
-[node name="Control" type="Control" parent="VBoxContainer/PanelContainer/HBoxContainer"]
-margin_left = 138.0
+[node name="Mode" type="Label" parent="VBoxContainer/PanelContainer/VBox/HBoxContainer"]
+margin_left = 148.0
+margin_top = 4.0
+margin_right = 188.0
+margin_bottom = 18.0
+text = "Mode:"
+
+[node name="Add" type="Button" parent="VBoxContainer/PanelContainer/VBox/HBoxContainer"]
+margin_left = 192.0
+margin_right = 220.0
+margin_bottom = 22.0
+hint_tooltip = "Add mode
+Use 'Space' to switch between them"
+toggle_mode = true
+pressed = true
+group = SubResource( 2 )
+icon = ExtResource( 4 )
+
+[node name="Sub" type="Button" parent="VBoxContainer/PanelContainer/VBox/HBoxContainer"]
+margin_left = 224.0
+margin_right = 252.0
+margin_bottom = 22.0
+hint_tooltip = "Subtract mode
+Use 'Space' to switch between them"
+toggle_mode = true
+group = SubResource( 2 )
+icon = ExtResource( 5 )
+
+[node name="Control" type="Control" parent="VBoxContainer/PanelContainer/VBox/HBoxContainer"]
+margin_left = 256.0
 margin_right = 446.0
-margin_bottom = 20.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ResetButton" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer"]
+[node name="ResetButton" type="Button" parent="VBoxContainer/PanelContainer/VBox/HBoxContainer"]
 margin_left = 450.0
 margin_right = 498.0
-margin_bottom = 20.0
+margin_bottom = 22.0
+hint_tooltip = "Cleanup simulation
+Hotkey: 'C'"
 text = "Reset"
-[connection signal="item_selected" from="VBoxContainer/PanelContainer/HBoxContainer/MenuButton" to="." method="_on_MenuButton_item_selected"]
-[connection signal="pressed" from="VBoxContainer/PanelContainer/HBoxContainer/ResetButton" to="." method="_on_ResetButton_pressed"]
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/PanelContainer/VBox"]
+margin_top = 26.0
+margin_right = 498.0
+margin_bottom = 30.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBox"]
+margin_top = 34.0
+margin_right = 498.0
+margin_bottom = 54.0
+
+[node name="InputSetupMode" type="Button" parent="VBoxContainer/PanelContainer/VBox/HBoxContainer2"]
+margin_right = 46.0
+margin_bottom = 20.0
+hint_tooltip = "Input tab
+Use 'F' key to switch tabs"
+toggle_mode = true
+pressed = true
+group = SubResource( 1 )
+text = "Input"
+
+[node name="SimulationSetupMode" type="Button" parent="VBoxContainer/PanelContainer/VBox/HBoxContainer2"]
+margin_left = 50.0
+margin_right = 130.0
+margin_bottom = 20.0
+hint_tooltip = "Simulation  tab
+Use 'F' key to switch tabs"
+toggle_mode = true
+group = SubResource( 1 )
+text = "Simulation"
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/PanelContainer/VBox"]
+margin_top = 58.0
+margin_right = 498.0
+margin_bottom = 62.0
+
+[node name="InputSettings" type="VBoxContainer" parent="VBoxContainer/PanelContainer/VBox"]
+margin_top = 66.0
+margin_right = 498.0
+margin_bottom = 118.0
+
+[node name="Radius" parent="VBoxContainer/PanelContainer/VBox/InputSettings" instance=ExtResource( 6 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 498.0
+margin_bottom = 24.0
+max_value = 30.0
+step = 1.0
+defval = 10.0
+
+[node name="Force" parent="VBoxContainer/PanelContainer/VBox/InputSettings" instance=ExtResource( 6 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 28.0
+margin_right = 498.0
+margin_bottom = 52.0
+max_value = 1.0
+step = 0.1
+defval = 1.0
+
+[node name="SimulationSettings" type="VBoxContainer" parent="VBoxContainer/PanelContainer/VBox"]
+visible = false
+margin_top = 66.0
+margin_right = 498.0
+margin_bottom = 118.0
+
+[node name="Viscocity" parent="VBoxContainer/PanelContainer/VBox/SimulationSettings" instance=ExtResource( 6 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 498.0
+margin_bottom = 24.0
+max_value = 5.0
+step = 0.1
+
+[node name="Vorticity" parent="VBoxContainer/PanelContainer/VBox/SimulationSettings" instance=ExtResource( 6 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 28.0
+margin_right = 498.0
+margin_bottom = 52.0
+max_value = 5.0
+step = 0.1
+[connection signal="item_selected" from="VBoxContainer/PanelContainer/VBox/HBoxContainer/MenuButton" to="." method="_on_MenuButton_item_selected"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBox/HBoxContainer/Add" to="." method="_on_Add_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBox/HBoxContainer/Sub" to="." method="_on_Sub_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBox/HBoxContainer/ResetButton" to="." method="_on_ResetButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBox/HBoxContainer2/InputSetupMode" to="." method="_on_InputSetupMode_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBox/HBoxContainer2/SimulationSetupMode" to="." method="_on_SimulationSetupMode_pressed"]
+[connection signal="value_changed" from="VBoxContainer/PanelContainer/VBox/InputSettings/Radius" to="." method="_on_Radius_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/PanelContainer/VBox/InputSettings/Force" to="." method="_on_Force_value_changed"]

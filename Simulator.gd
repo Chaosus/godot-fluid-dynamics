@@ -8,7 +8,9 @@ onready var final = $Final
 
 #onready var pressure = $Pressure
 
-export(float) var splat_radius = 1.0;
+export(float) var splat_radius := 10.0;
+export(float) var force := 1.0
+export(int) var brush_mode := 1
 
 var density_splat
 var velocity_splat
@@ -56,8 +58,18 @@ func _input(event) -> void:
 		mouse_pos = event.position
 				
 func apply_density_splat(pos) -> void:
+	if !has_focus():
+		return
 	density_splat.set_shader_param("point", pos)
-	density_splat.set_shader_param("force", Vector3(1, 1, 1))
+	
+	var fv
+	
+	if(brush_mode == 1): # subtract
+		fv = Vector3(1, 1, 1) - Vector3(force, force, force)
+	else: # add
+		fv = Vector3(force, force, force)
+	
+	density_splat.set_shader_param("force", fv)
 	
 	if Input.is_mouse_button_pressed(BUTTON_LEFT):
 		density_splat.set_shader_param("radius", splat_radius*splat_radius)
@@ -65,6 +77,8 @@ func apply_density_splat(pos) -> void:
 		density_splat.set_shader_param("radius", 0.0)
 		
 func apply_velocity_splat(pos) -> void:
+	if !has_focus():
+		return
 	velocity_splat.set_shader_param("point", pos)
 	
 	if Input.is_mouse_button_pressed(BUTTON_LEFT):
