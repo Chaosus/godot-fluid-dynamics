@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://ui/ui_theme.tres" type="Theme" id=1]
 [ext_resource path="res://Test.gd" type="Script" id=2]
@@ -6,60 +6,69 @@
 [ext_resource path="res://Modes.gd" type="Script" id=4]
 [ext_resource path="res://ui/add.png" type="Texture" id=5]
 [ext_resource path="res://ui/sub.png" type="Texture" id=6]
-[ext_resource path="res://SimSlider.tscn" type="PackedScene" id=7]
+[ext_resource path="res://ui/form_sphere.png" type="Texture" id=7]
+[ext_resource path="res://ui/form_rect.png" type="Texture" id=8]
+[ext_resource path="res://ui/reset.png" type="Texture" id=9]
+[ext_resource path="res://SimSlider.tscn" type="PackedScene" id=10]
+[ext_resource path="res://SimCheckBox.tscn" type="PackedScene" id=11]
 
 [sub_resource type="ButtonGroup" id=1]
 
 [sub_resource type="ButtonGroup" id=2]
 
 [node name="Test" type="Control"]
-margin_right = 526.0
-margin_bottom = 546.0
-rect_min_size = Vector2( 526, 545 )
+margin_right = 800.0
+margin_bottom = 512.0
+rect_min_size = Vector2( 800, 512 )
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="HBoxContainer" parent="."]
 margin_right = 512.0
 margin_bottom = 670.0
 custom_constants/separation = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Simulator" parent="VBoxContainer" instance=ExtResource( 3 )]
+size_flags_horizontal = 0
+size_flags_vertical = 0
 splat_radius = 10.0
 brush_mode = 0
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
-margin_top = 512.0
-margin_right = 512.0
-margin_bottom = 660.0
-rect_min_size = Vector2( 512, 148 )
+margin_left = 512.0
+margin_right = 800.0
+margin_bottom = 512.0
+rect_min_size = Vector2( 288, 512 )
+size_flags_vertical = 0
 
 [node name="HBox" type="HBoxContainer" parent="VBoxContainer/PanelContainer"]
-margin_right = 512.0
-margin_bottom = 148.0
+margin_right = 288.0
+margin_bottom = 512.0
+custom_constants/separation = 0
 
 [node name="Offset" type="Control" parent="VBoxContainer/PanelContainer/HBox"]
-margin_bottom = 148.0
+margin_right = 5.0
+margin_bottom = 512.0
+rect_min_size = Vector2( 5, 0 )
 
 [node name="VBox" type="VBoxContainer" parent="VBoxContainer/PanelContainer/HBox"]
-margin_left = 4.0
-margin_right = 508.0
-margin_bottom = 148.0
+margin_left = 5.0
+margin_right = 283.0
+margin_bottom = 512.0
 size_flags_horizontal = 3
 
 [node name="Control" type="Control" parent="VBoxContainer/PanelContainer/HBox/VBox"]
-margin_right = 504.0
+margin_right = 278.0
+margin_bottom = 5.0
+rect_min_size = Vector2( 0, 5 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/HBox/VBox"]
-margin_top = 4.0
-margin_right = 504.0
-margin_bottom = 30.0
+margin_top = 9.0
+margin_right = 278.0
+margin_bottom = 35.0
 
 [node name="Surface" type="Label" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer"]
 margin_top = 3.0
@@ -77,16 +86,34 @@ Use 'Q' and 'E' to switch between them"
 text = "Density"
 script = ExtResource( 4 )
 
-[node name="Mode" type="Label" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer"]
+[node name="ResetButton" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer"]
 margin_left = 198.0
+margin_right = 278.0
+margin_bottom = 26.0
+hint_tooltip = "Cleanup simulation
+Hotkey: 'C'"
+size_flags_horizontal = 3
+text = "Clear"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/PanelContainer/HBox/VBox"]
+margin_top = 39.0
+margin_right = 278.0
+margin_bottom = 43.0
+
+[node name="ModeBox" type="HBoxContainer" parent="VBoxContainer/PanelContainer/HBox/VBox"]
+margin_top = 47.0
+margin_right = 278.0
+margin_bottom = 73.0
+
+[node name="Mode" type="Label" parent="VBoxContainer/PanelContainer/HBox/VBox/ModeBox"]
 margin_top = 3.0
-margin_right = 244.0
+margin_right = 46.0
 margin_bottom = 23.0
 text = "Mode:"
 
-[node name="Add" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer"]
-margin_left = 248.0
-margin_right = 276.0
+[node name="Add" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/ModeBox"]
+margin_left = 50.0
+margin_right = 78.0
 margin_bottom = 26.0
 hint_tooltip = "Add mode
 Use 'Space' to switch between them"
@@ -95,9 +122,9 @@ pressed = true
 group = SubResource( 1 )
 icon = ExtResource( 5 )
 
-[node name="Sub" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer"]
-margin_left = 280.0
-margin_right = 308.0
+[node name="Sub" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/ModeBox"]
+margin_left = 82.0
+margin_right = 110.0
 margin_bottom = 26.0
 hint_tooltip = "Subtract mode
 Use 'Space' to switch between them"
@@ -105,127 +132,195 @@ toggle_mode = true
 group = SubResource( 1 )
 icon = ExtResource( 6 )
 
-[node name="Control" type="Control" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer"]
-margin_left = 312.0
-margin_right = 384.0
+[node name="Control" type="Control" parent="VBoxContainer/PanelContainer/HBox/VBox/ModeBox"]
+margin_left = 114.0
+margin_right = 164.0
 margin_bottom = 26.0
 size_flags_horizontal = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="ResetButton" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer"]
-margin_left = 388.0
-margin_right = 504.0
+[node name="BrushBox" type="HBoxContainer" parent="VBoxContainer/PanelContainer/HBox/VBox/ModeBox"]
+margin_left = 168.0
+margin_right = 278.0
 margin_bottom = 26.0
-hint_tooltip = "Cleanup simulation
-Hotkey: 'C'"
-text = "Clear surfaces"
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/PanelContainer/HBox/VBox"]
-margin_top = 34.0
-margin_right = 504.0
-margin_bottom = 38.0
+[node name="Form" type="Label" parent="VBoxContainer/PanelContainer/HBox/VBox/ModeBox/BrushBox"]
+margin_top = 3.0
+margin_right = 46.0
+margin_bottom = 23.0
+text = "Brush:"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/PanelContainer/HBox/VBox"]
-margin_top = 42.0
-margin_right = 504.0
-margin_bottom = 68.0
-
-[node name="InputSetupMode" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2"]
-margin_right = 50.0
+[node name="CircleFormButton" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/ModeBox/BrushBox"]
+margin_left = 50.0
+margin_right = 78.0
 margin_bottom = 26.0
-hint_tooltip = "Input tab
-Use 'F' key to switch tabs"
+hint_tooltip = "Sphere brush"
 toggle_mode = true
 pressed = true
 group = SubResource( 2 )
-text = "Input"
+icon = ExtResource( 7 )
 
-[node name="SimulationSetupMode" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2"]
-margin_left = 54.0
-margin_right = 142.0
+[node name="SquareFormButton" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/ModeBox/BrushBox"]
+margin_left = 82.0
+margin_right = 110.0
 margin_bottom = 26.0
-hint_tooltip = "Simulation  tab
-Use 'F' key to switch tabs"
+hint_tooltip = "Square brush"
 toggle_mode = true
 group = SubResource( 2 )
-text = "Simulation"
+icon = ExtResource( 8 )
 
-[node name="Offset" type="Control" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2"]
-margin_left = 146.0
-margin_right = 359.0
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/PanelContainer/HBox/VBox"]
+margin_top = 77.0
+margin_right = 278.0
+margin_bottom = 81.0
+
+[node name="InputHeader" type="HBoxContainer" parent="VBoxContainer/PanelContainer/HBox/VBox"]
+margin_top = 85.0
+margin_right = 278.0
+margin_bottom = 111.0
+
+[node name="Control" type="Control" parent="VBoxContainer/PanelContainer/HBox/VBox/InputHeader"]
+margin_right = 69.0
 margin_bottom = 26.0
 size_flags_horizontal = 3
 
-[node name="ResetAllSettings" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2"]
-margin_left = 363.0
-margin_right = 504.0
-margin_bottom = 26.0
-text = "Reset all settings"
+[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/HBox/VBox/InputHeader"]
+margin_left = 73.0
+margin_top = 3.0
+margin_right = 172.0
+margin_bottom = 23.0
+text = "Input options"
+align = 1
 
-[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/PanelContainer/HBox/VBox"]
-margin_top = 72.0
-margin_right = 504.0
-margin_bottom = 76.0
+[node name="Control2" type="Control" parent="VBoxContainer/PanelContainer/HBox/VBox/InputHeader"]
+margin_left = 176.0
+margin_right = 245.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="ResetButton" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/InputHeader"]
+margin_left = 249.0
+margin_right = 277.0
+margin_bottom = 26.0
+hint_tooltip = "Reset all items in subsection to default"
+disabled = true
+icon = ExtResource( 9 )
+
+[node name="HSeparator4" type="HSeparator" parent="VBoxContainer/PanelContainer/HBox/VBox"]
+margin_top = 115.0
+margin_right = 278.0
+margin_bottom = 119.0
 
 [node name="InputSettings" type="VBoxContainer" parent="VBoxContainer/PanelContainer/HBox/VBox"]
-margin_top = 80.0
-margin_right = 504.0
-margin_bottom = 144.0
+margin_top = 123.0
+margin_right = 278.0
+margin_bottom = 187.0
 
-[node name="Radius" parent="VBoxContainer/PanelContainer/HBox/VBox/InputSettings" instance=ExtResource( 7 )]
+[node name="Radius" parent="VBoxContainer/PanelContainer/HBox/VBox/InputSettings" instance=ExtResource( 10 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 504.0
+margin_right = 278.0
 margin_bottom = 30.0
 max_value = 30.0
 step = 1.0
 defval = 10.0
 
-[node name="Force" parent="VBoxContainer/PanelContainer/HBox/VBox/InputSettings" instance=ExtResource( 7 )]
+[node name="Force" parent="VBoxContainer/PanelContainer/HBox/VBox/InputSettings" instance=ExtResource( 10 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 34.0
-margin_right = 504.0
+margin_right = 278.0
 margin_bottom = 64.0
 max_value = 1.0
 step = 0.1
 defval = 1.0
 
-[node name="SimulationSettings" type="VBoxContainer" parent="VBoxContainer/PanelContainer/HBox/VBox"]
-visible = false
-margin_top = 66.0
-margin_right = 498.0
-margin_bottom = 118.0
+[node name="HSeparator5" type="HSeparator" parent="VBoxContainer/PanelContainer/HBox/VBox"]
+margin_top = 191.0
+margin_right = 278.0
+margin_bottom = 195.0
 
-[node name="Viscocity" parent="VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings" instance=ExtResource( 7 )]
+[node name="SimHeader" type="HBoxContainer" parent="VBoxContainer/PanelContainer/HBox/VBox"]
+margin_top = 199.0
+margin_right = 278.0
+margin_bottom = 225.0
+
+[node name="Control" type="Control" parent="VBoxContainer/PanelContainer/HBox/VBox/SimHeader"]
+margin_right = 50.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/HBox/VBox/SimHeader"]
+margin_left = 54.0
+margin_top = 3.0
+margin_right = 191.0
+margin_bottom = 23.0
+text = "Simulation options"
+align = 1
+
+[node name="Control2" type="Control" parent="VBoxContainer/PanelContainer/HBox/VBox/SimHeader"]
+margin_left = 195.0
+margin_right = 245.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="ResetButton" type="Button" parent="VBoxContainer/PanelContainer/HBox/VBox/SimHeader"]
+margin_left = 249.0
+margin_right = 277.0
+margin_bottom = 26.0
+hint_tooltip = "Reset all items in subsection to default"
+disabled = true
+icon = ExtResource( 9 )
+
+[node name="HSeparator6" type="HSeparator" parent="VBoxContainer/PanelContainer/HBox/VBox"]
+margin_top = 229.0
+margin_right = 278.0
+margin_bottom = 233.0
+
+[node name="SimulationSettings" type="VBoxContainer" parent="VBoxContainer/PanelContainer/HBox/VBox"]
+margin_top = 237.0
+margin_right = 278.0
+margin_bottom = 333.0
+
+[node name="DisableObstacles" parent="VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings" instance=ExtResource( 11 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 498.0
-margin_bottom = 24.0
+margin_right = 278.0
+margin_bottom = 28.0
+checkbox_text = "Disable obstacles"
+
+[node name="Viscocity" parent="VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings" instance=ExtResource( 10 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 32.0
+margin_right = 278.0
+margin_bottom = 62.0
 max_value = 5.0
 step = 0.1
 
-[node name="Vorticity" parent="VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings" instance=ExtResource( 7 )]
+[node name="Vorticity" parent="VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings" instance=ExtResource( 10 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 28.0
-margin_right = 498.0
-margin_bottom = 52.0
+margin_top = 66.0
+margin_right = 278.0
+margin_bottom = 96.0
 max_value = 5.0
 step = 0.1
 
 [node name="Offset2" type="Control" parent="VBoxContainer/PanelContainer/HBox"]
-margin_left = 512.0
-margin_right = 512.0
-margin_bottom = 148.0
+margin_left = 283.0
+margin_right = 288.0
+margin_bottom = 512.0
+rect_min_size = Vector2( 5, 0 )
 [connection signal="item_selected" from="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/MenuButton" to="." method="_on_MenuButton_item_selected"]
-[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/Add" to="." method="_on_Add_pressed"]
-[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/Sub" to="." method="_on_Sub_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/ResetButton" to="." method="_on_ResetButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2/InputSetupMode" to="." method="_on_InputSetupMode_pressed"]
-[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2/SimulationSetupMode" to="." method="_on_SimulationSetupMode_pressed"]
-[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2/ResetAllSettings" to="." method="_on_ResetAllSettings_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/ModeBox/Add" to="." method="_on_Add_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/ModeBox/Sub" to="." method="_on_Sub_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/ModeBox/BrushBox/CircleFormButton" to="." method="_on_CircleFormButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/ModeBox/BrushBox/SquareFormButton" to="." method="_on_SquareFormButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/InputHeader/ResetButton" to="." method="_on_ResetInputSubSettings_pressed"]
 [connection signal="value_changed" from="VBoxContainer/PanelContainer/HBox/VBox/InputSettings/Radius" to="." method="_on_Radius_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/PanelContainer/HBox/VBox/InputSettings/Force" to="." method="_on_Force_value_changed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/HBox/VBox/SimHeader/ResetButton" to="." method="_on_ResetSimSubSettings_pressed"]
+[connection signal="checked_changed" from="VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/DisableObstacles" to="." method="_on_DisableObstacles_checked_changed"]
+[connection signal="value_changed" from="VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/Viscocity" to="." method="_on_Viscocity_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/Vorticity" to="." method="_on_Vorticity_value_changed"]

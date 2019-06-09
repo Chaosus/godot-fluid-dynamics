@@ -6,17 +6,16 @@ onready var mode_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/
 onready var input_tab = $VBoxContainer/PanelContainer/HBox/VBox/InputSettings
 onready var sim_tab = $VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings
 
-onready var tab_input_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2/InputSetupMode
-onready var tab_sim_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer2/SimulationSetupMode
+onready var add_button = $VBoxContainer/PanelContainer/HBox/VBox/ModeBox/Add
+onready var sub_button = $VBoxContainer/PanelContainer/HBox/VBox/ModeBox/Sub
 
-onready var add_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/Add
-onready var sub_button = $VBoxContainer/PanelContainer/HBox/VBox/HBoxContainer/Sub
+onready var reset_input_button = $VBoxContainer/PanelContainer/HBox/VBox/InputHeader/ResetButton
+onready var reset_sim_button = $VBoxContainer/PanelContainer/HBox/VBox/SimHeader/ResetButton
 
-var spin_all_settings = []
-var spin_input_settings = []
-var spin_sim_settings = []
+var all_settings = []
+var input_settings = []
+var sim_settings = []
 
-var curr_tab = 0
 var curr_surf = 3
 
 const MAX_TAB = 2
@@ -27,14 +26,17 @@ var mode = 0
 func _ready() -> void:
 	sim.grab_focus()
 	
-	spin_input_settings.append($VBoxContainer/PanelContainer/HBox/VBox/InputSettings/Radius)
-	spin_input_settings.append($VBoxContainer/PanelContainer/HBox/VBox/InputSettings/Force)
+	input_settings.append($VBoxContainer/PanelContainer/HBox/VBox/InputSettings/Radius)
+	input_settings.append($VBoxContainer/PanelContainer/HBox/VBox/InputSettings/Force)
+
+	sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/DisableObstacles)
+	sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/Viscocity)
+	sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/Vorticity)
 	
-	spin_sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/Viscocity)
-	spin_sim_settings.append($VBoxContainer/PanelContainer/HBox/VBox/SimulationSettings/Vorticity)
+	all_settings.append(input_settings)
+	all_settings.append(sim_settings)
 	
-	spin_all_settings.append(spin_input_settings)
-	spin_all_settings.append(spin_sim_settings)
+	OS.set_window_title("FluidDynamics " + "(512 x 512)")
 	
 func set_surface(idx : int) -> void:
 	curr_surf = idx
@@ -69,17 +71,6 @@ func _process(_delta : float) -> void:
 		else:
 			sub_button.pressed = true
 			sim.brush_mode = 1
-		
-	
-	if Input.is_action_just_pressed("switch_settings"):
-		curr_tab = wrapi(curr_tab + 1, 0, MAX_TAB)
-		match curr_tab:
-			0:
-				tab_input_button.pressed = true
-				_on_InputSetupMode_pressed()
-			1:
-				tab_sim_button.pressed = true
-				_on_SimulationSetupMode_pressed()
 	
 func _on_MenuButton_item_selected(id : int) -> void:
 	sim.change_mode(id)
@@ -95,12 +86,26 @@ func _on_SimulationSetupMode_pressed() -> void:
 	sim_tab.visible = true
 	input_tab.visible = false
 
+func check_settings():
+	reset_input_button.disabled = true
+	for item in input_settings:
+		if item.get_value() != item.defval:
+			reset_input_button.disabled = false
+			break
+	reset_sim_button.disabled = true
+	for item in sim_settings:
+		if item.get_value() != item.defval:
+			reset_sim_button.disabled = false
+			break
+
 func _on_Radius_value_changed(value : float) -> void:
 	if sim:
+		check_settings()
 		sim.splat_radius = value
 
 func _on_Force_value_changed(value : float) -> void:
 	if sim:
+		check_settings()
 		sim.force = value
 
 func _on_Add_pressed() -> void:
@@ -113,8 +118,31 @@ func _on_Sub_pressed() -> void:
 	if sim:
 		sim.brush_mode = 1
 		
-func _on_ResetAllSettings_pressed():
-	for tab in spin_all_settings:
-		for setting in tab:
-			setting.reset()
-	
+func _on_ResetInputSubSettings_pressed():
+	for item in input_settings:
+		item.reset()
+
+func _on_ResetSimSubSettings_pressed():
+	for item in sim_settings:
+		item.reset()
+
+func _on_DisableObstacles_checked_changed(button_pressed : bool) -> void:
+	if sim:
+		check_settings()
+		sim.disable_obstacles(button_pressed)
+
+func _on_Viscocity_value_changed(_value):
+	if sim:
+		check_settings()
+
+func _on_Vorticity_value_changed(_value):
+	if sim:
+		check_settings()
+
+func _on_CircleFormButton_pressed():
+	if sim:
+		sim.set_form(0)
+
+func _on_SquareFormButton_pressed():
+	if sim:
+		sim.set_form(1)

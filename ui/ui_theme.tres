@@ -4,6 +4,7 @@
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.388235, 0.388235, 0.388235, 1 )
+border_color = Color( 0.537255, 0.537255, 0.537255, 1 )
 
 [sub_resource type="StyleBoxFlat" id=3]
 content_margin_left = 10.0

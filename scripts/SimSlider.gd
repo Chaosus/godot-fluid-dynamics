@@ -1,5 +1,6 @@
 tool
 extends HBoxContainer
+class_name SimSlider
 
 signal value_changed(value)
 
@@ -11,6 +12,9 @@ export(float) var max_value = 5.0
 export(float) var step = 0.1
 export(float) var defval = 0.0
 
+func get_value() -> float:
+	return slider.value
+
 func reset() -> void:
 	slider.value = defval
 	reset_button.disabled = true
@@ -21,6 +25,7 @@ func _ready() -> void:
 	slider.value = defval
 	spin_box.max_value = max_value
 	spin_box.step = step
+	spin_box.value = defval
 	$Label.text = get_name() + ":"
 
 func _on_SpinBox_value_changed(value : float) -> void:

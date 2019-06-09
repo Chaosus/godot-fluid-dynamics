@@ -3,8 +3,6 @@
 [ext_resource path="res://scripts/SimSlider.gd" type="Script" id=1]
 [ext_resource path="res://ui/reset.png" type="Texture" id=2]
 
-
-
 [node name="SimSlider" type="HBoxContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -23,7 +21,7 @@ text = "SimSlider:"
 
 [node name="HSlider" type="HSlider" parent="."]
 margin_left = 69.0
-margin_right = 85.0
+margin_right = 357.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -32,14 +30,15 @@ step = 0.0
 ticks_on_borders = true
 
 [node name="SpinBox" type="SpinBox" parent="."]
-margin_left = 89.0
-margin_right = 163.0
+margin_left = 361.0
+margin_right = 435.0
 margin_bottom = 24.0
-step = 0.1
+max_value = 0.0
+step = 0.0
 
 [node name="ResetButton" type="Button" parent="."]
-margin_left = 167.0
-margin_right = 195.0
+margin_left = 439.0
+margin_right = 467.0
 margin_bottom = 24.0
 hint_tooltip = "Reset to default"
 disabled = true

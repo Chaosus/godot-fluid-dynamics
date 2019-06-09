@@ -11,6 +11,7 @@ onready var final = $Final
 export(float) var splat_radius := 10.0;
 export(float) var force := 1.0
 export(int) var brush_mode := 1
+export(ImageTexture) var obstacles_texture
 
 var density_splat
 var velocity_splat
@@ -19,6 +20,28 @@ var mouse_pos := Vector2(0.0, 0.0)
 var prev_mouse_pos := Vector2(0.0, 0.0)
 
 var mode_idx := 0
+var _disable_obstacles = false
+
+var empty_texture
+var _form
+
+func set_form(form : int) -> void:
+	_form = form
+	density_splat.set_shader_param("form", form)
+	velocity_splat.set_shader_param("form", form)		
+
+func create_texture(width : int, height : int):
+	var texture = ImageTexture.new()
+	texture.create(width, height, Image.FORMAT_BPTC_RGBF, ImageTexture.FLAGS_DEFAULT)
+	return texture
+
+func disable_obstacles(toggled : bool) -> void:
+	_disable_obstacles = toggled
+	if _disable_obstacles:
+		obstacles_texture = empty_texture
+	else:
+		obstacles_texture = preload("res://resources/bounds.png")
+	(final.get_node("Final").material as ShaderMaterial).set_shader_param("obstacles_texture", obstacles_texture)
 
 func change_mode(id : int) -> void:
 	var v : Viewport
@@ -49,6 +72,8 @@ func _ready() -> void:
 	
 	density_splat = $Density/Splat.material
 	velocity_splat = $Velocity/Splat.material
+	
+	empty_texture = create_texture(512, 512)
 	
 	change_mode(3)
 

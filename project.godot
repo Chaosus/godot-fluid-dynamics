@@ -9,12 +9,24 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "HBoxContainer",
+"class": "SimCheckBox",
+"language": "GDScript",
+"path": "res://scripts/SimCheckBox.gd"
+}, {
+"base": "HBoxContainer",
+"class": "SimSlider",
+"language": "GDScript",
+"path": "res://scripts/SimSlider.gd"
+}, {
 "base": "TextureRect",
 "class": "Simulator",
 "language": "GDScript",
 "path": "res://Simulator.gd"
 } ]
 _global_script_class_icons={
+"SimCheckBox": "",
+"SimSlider": "",
 "Simulator": ""
 }
 
@@ -26,8 +38,8 @@ config/icon="res://icon.png"
 
 [display]
 
-window/size/width=512
-window/size/height=660
+window/size/width=800
+window/size/height=512
 window/size/resizable=false
 
 [input]
@@ -55,11 +67,6 @@ clear={
 surf_divergence={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":true,"meta":false,"command":true,"pressed":false,"scancode":51,"unicode":0,"echo":false,"script":null)
- ]
-}
-switch_settings={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":70,"unicode":0,"echo":false,"script":null)
  ]
 }
 switch_surface_forward={
