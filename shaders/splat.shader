@@ -2,6 +2,7 @@ shader_type canvas_item;
 
 // SPLAT DENSITY SHADER
 
+uniform int brush_mode = 0;
 uniform vec3 force;
 uniform int form = 0;
 
@@ -33,5 +34,10 @@ void fragment()
 	{
 		splat = rect(tcoord, radius / 8.0);
 	}
-    COLOR.rgb = mix(base, force, splat).rgb;
+	if(brush_mode == 1) {
+		COLOR.rgb = mix(base, vec3(0, 0, 0), splat).rgb;
+	}else {
+		COLOR.rgb = mix(base, force, splat).rgb;
+	}
+    
 }
