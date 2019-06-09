@@ -94,7 +94,7 @@ void fragment()
 	float k3 = texelFetch(SCREEN_TEXTURE, ivec2(i1, j1), 0).r;
 
 	float d = s0 * (t0 * k0 + t1 * k1) + s1 * (t0 * k2 + t1 * k3);
-	COLOR.rgb = vec3(d, 0, 0);
+	COLOR.rgb = vec3(d);
 }"
 
 [sub_resource type="ShaderMaterial" id=6]
