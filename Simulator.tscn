@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://Simulator.gd" type="Script" id=1]
 [ext_resource path="res://scripts/Density.gd" type="Script" id=2]
@@ -11,7 +11,8 @@
 [ext_resource path="res://scripts/Divergence.gd" type="Script" id=9]
 [ext_resource path="res://shaders/divergence.shader" type="Shader" id=10]
 [ext_resource path="res://shaders/linsolve.shader" type="Shader" id=11]
-[ext_resource path="res://firegrad.tres" type="Gradient" id=12]
+[ext_resource path="res://scripts/Final.gd" type="Script" id=12]
+[ext_resource path="res://firegrad.tres" type="Gradient" id=13]
 
 [sub_resource type="ViewportTexture" id=1]
 
@@ -162,7 +163,7 @@ resource_local_to_scene = true
 shader = SubResource( 13 )
 shader_param/force = Vector3( 0, 0, 0 )
 shader_param/point = Vector2( 0, 0 )
-shader_param/radius = 0.0
+shader_param/radius = 375.0
 
 [sub_resource type="ImageTexture" id=15]
 flags = 3
@@ -202,51 +203,30 @@ shader_param/A = 1.0
 shader_param/C = 4.0
 shader_param/MAX_ITER = 20
 
-[sub_resource type="Shader" id=22]
-resource_local_to_scene = true
-code = "shader_type canvas_item;
-
-uniform sampler2D density_texture;
-
-void fragment()
-{
-	COLOR.r = texture(density_texture, SCREEN_UV).r;
-}"
-
-[sub_resource type="ViewportTexture" id=23]
-viewport_path = NodePath("Density")
-
-[sub_resource type="ShaderMaterial" id=24]
-resource_local_to_scene = true
-shader = SubResource( 22 )
-shader_param/density_texture = SubResource( 23 )
-
-[sub_resource type="ViewportTexture" id=25]
-flags = 3
-
 [sub_resource type="Shader" id=26]
 code = "shader_type canvas_item;
 
-uniform sampler2D gradient;
-uniform sampler2D blocks;
+uniform sampler2D density_texture;
+uniform sampler2D gradient_texture;
+uniform sampler2D obstacles_texture;
 
 void fragment()
 {
-	float density = texture(SCREEN_TEXTURE, UV).r;
-	float block = texture(blocks, UV).r;
-	vec3 color = texture(gradient, vec2(density, 0.0)).rgb;
-	color += vec3(block, 0, 0);
+	float density = texture(density_texture, UV).r;
+	float obstacle = texture(obstacles_texture, UV).r;
+	vec3 color = texture(gradient_texture, vec2(density, 0.0)).rgb;
+	color += vec3(obstacle, 0, 0);
 	COLOR.rgb = color;
 }"
 
-[sub_resource type="GradientTexture" id=27]
-gradient = ExtResource( 12 )
+[sub_resource type="GradientTexture" id=30]
+gradient = ExtResource( 13 )
 
 [sub_resource type="ShaderMaterial" id=28]
 resource_local_to_scene = true
 shader = SubResource( 26 )
-shader_param/gradient = SubResource( 27 )
-shader_param/blocks = ExtResource( 6 )
+shader_param/gradient_texture = SubResource( 30 )
+shader_param/obstacles_texture = ExtResource( 6 )
 
 [sub_resource type="ImageTexture" id=29]
 size = Vector2( 512, 512 )
@@ -282,7 +262,7 @@ anchor_bottom = 1.0
 texture = SubResource( 2 )
 stretch_mode = 1
 
-[node name="Buffer2" type="BackBufferCopy" parent="Density"]
+[node name="Buffer" type="BackBufferCopy" parent="Density"]
 copy_mode = 2
 
 [node name="Diffusion" type="TextureRect" parent="Density"]
@@ -292,7 +272,7 @@ anchor_bottom = 1.0
 texture = SubResource( 4 )
 stretch_mode = 1
 
-[node name="Buffer3" type="BackBufferCopy" parent="Density"]
+[node name="Buffer2" type="BackBufferCopy" parent="Density"]
 copy_mode = 2
 
 [node name="Advection" type="TextureRect" parent="Density"]
@@ -302,7 +282,7 @@ anchor_bottom = 1.0
 texture = SubResource( 7 )
 stretch_mode = 1
 
-[node name="Buffer" type="BackBufferCopy" parent="Density"]
+[node name="Buffer3" type="BackBufferCopy" parent="Density"]
 copy_mode = 2
 
 [node name="Bounds" type="TextureRect" parent="Density"]
@@ -433,18 +413,9 @@ usage = 0
 render_target_v_flip = true
 render_target_clear_mode = 2
 render_target_update_mode = 3
+script = ExtResource( 12 )
 
 [node name="Final" type="TextureRect" parent="Final"]
-material = SubResource( 24 )
-margin_right = 512.0
-margin_bottom = 512.0
-texture = SubResource( 25 )
-stretch_mode = 1
-
-[node name="Buffer" type="BackBufferCopy" parent="Final"]
-copy_mode = 2
-
-[node name="Colorize" type="TextureRect" parent="Final"]
 material = SubResource( 28 )
 margin_right = 512.0
 margin_bottom = 512.0
