@@ -18,39 +18,32 @@ var curr_surf = 3
 const MAX_TAB = 2
 const MAX_SURF = 4
 
-var mode = 1
+var mode = 0
 
 func _ready() -> void:
 	sim.grab_focus()
+
+func set_surface(idx : int) -> void:
+	curr_surf = idx
+	mode_button.select(idx)
+	sim.change_mode(idx)
 
 func _process(_delta : float) -> void:
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().quit()
 		
 	if Input.is_action_just_pressed("switch_surface_backward"):
-		curr_surf = wrapi(curr_surf - 1, 0, MAX_SURF)
-		mode_button.select(curr_surf)
-		sim.change_mode(curr_surf)
+		set_surface(wrapi(curr_surf - 1, 0, MAX_SURF))
 	if Input.is_action_just_pressed("switch_surface_forward"):
-		curr_surf = wrapi(curr_surf + 1, 0, MAX_SURF)
-		mode_button.select(curr_surf)
-		sim.change_mode(curr_surf)	
-	if Input.is_action_just_pressed("mode_density"):
-		curr_surf = 0
-		mode_button.select(0)
-		sim.change_mode(0)
-	if Input.is_action_just_pressed("mode_velocity"):
-		curr_surf = 1
-		mode_button.select(1)
-		sim.change_mode(1)
-	if Input.is_action_just_pressed("mode_divergence"):
-		curr_surf = 2
-		mode_button.select(2)
-		sim.change_mode(2)
-	if Input.is_action_just_pressed("mode_final"):
-		curr_surf = 3
-		mode_button.select(3)
-		sim.change_mode(3)
+		set_surface(wrapi(curr_surf + 1, 0, MAX_SURF))
+	if Input.is_action_just_pressed("surf_density"):
+		set_surface(0)
+	if Input.is_action_just_pressed("surf_velocity"):
+		set_surface(1)
+	if Input.is_action_just_pressed("surf_divergence"):
+		set_surface(2)
+	if Input.is_action_just_pressed("surf_final"):
+		set_surface(3)
 	
 	if Input.is_action_just_pressed("clear"):
 		sim.clear()
