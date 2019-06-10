@@ -144,7 +144,7 @@ func apply_velocity_splat() -> void:
 	var rmb = _rmb_velocity and Input.is_mouse_button_pressed(BUTTON_RIGHT)
 	
 	if (lmb or rmb) && brush_mode == 0:
-		var velocity := _mouse_pos.direction_to(_prev_mouse_pos)
+		var velocity := (_prev_mouse_pos - _mouse_pos).normalized() # do not change it to direction_to since this function is not supported below 3.1.1 version of Godot
 		var rest = 0.0
 		if Vector2(sign(velocity.x), sign(velocity.y)) != Vector2(0, 0):
 			rest = 1.0
