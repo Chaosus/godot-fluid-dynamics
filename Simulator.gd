@@ -143,7 +143,7 @@ func apply_velocity_splat(pos) -> void:
 	var rmb = _rmb_velocity and Input.is_mouse_button_pressed(BUTTON_RIGHT)
 	
 	if (lmb or rmb) && brush_mode == 0:
-		var velocity := mouse_pos.direction_to(prev_mouse_pos)
+		var velocity := mouse_pos - prev_mouse_pos
 		var rest = 0.0
 		if Vector2(sign(velocity.x), sign(velocity.y)) != Vector2(0, 0):
 			rest = 1.0
