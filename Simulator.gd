@@ -30,6 +30,11 @@ var _rmb_velocity := false
 var _invert_rmb := true
 var _is_cursor_inside_sim := false
 
+func set_viscocity(value):
+	value = 1.0 - value
+	density.set_viscocity(value)
+	velocity.set_viscocity(value)
+
 func set_lmb_density(toggled):
 	_lmb_density = toggled
 

@@ -1,9 +1,11 @@
 extends Viewport
 
-onready var input := $Divergence.material as ShaderMaterial
-
-var velocity
+onready var divergence := $Divergence.material as ShaderMaterial
 
 func _ready():
-	velocity = get_parent().get_node("Velocity").get_texture()
-	input.set_shader_param("velocity_texture", velocity)
+	
+	var velocity = get_parent().get_node("Velocity").get_texture()
+	var obstacle = preload("res://resources/bounds.png")
+	
+	divergence.set_shader_param("velocity_texture", velocity)
+	divergence.set_shader_param("obstacle_texture", obstacle)

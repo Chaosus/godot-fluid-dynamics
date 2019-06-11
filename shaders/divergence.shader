@@ -3,7 +3,9 @@ shader_type canvas_item;
 // DIVERGENCE SHADER
 
 uniform float N = 512;
+
 uniform sampler2D velocity_texture;
+uniform sampler2D obstacle_texture;
 
 void fragment()
 {

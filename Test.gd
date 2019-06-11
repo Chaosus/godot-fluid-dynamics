@@ -157,6 +157,7 @@ func _on_DisableObstacles_checked_changed(button_pressed : bool) -> void:
 func _on_Viscocity_value_changed(_value):
 	if sim:
 		check_settings()
+		sim.set_viscocity(_value)
 
 func _on_Vorticity_value_changed(_value):
 	if sim:
